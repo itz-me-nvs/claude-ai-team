@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: House style enforced by all builder agents (frontend-builder, api-integrator) and checked by code-reviewer. Covers naming, file organization, server vs client boundaries, TypeScript strictness, import order, colocation, and comment policy.
+description: House style enforced by all builder agents (frontend-builder, mobile-builder, api-integrator) and checked by code-reviewer. Covers naming, file organization, server vs client boundaries, TypeScript strictness, import order, colocation, and comment policy. Applies to both web (Next.js) and mobile (React Native/Expo) code.
 ---
 
 # Coding Standards
@@ -137,8 +137,66 @@ async function getUser(id: string): Promise<User> {
 }
 ```
 
+---
+
+## React Native / Expo — Additional Rules
+
+These apply to mobile-builder in addition to all rules above.
+
+### File Organization (Expo Router)
+
+```
+app/                         # Expo Router file-based routes
+├── _layout.tsx              # Root layout
+├── (auth)/
+│   ├── _layout.tsx
+│   ├── login.tsx
+│   └── register.tsx
+├── (tabs)/
+│   ├── _layout.tsx
+│   ├── home.tsx
+│   └── profile.tsx
+└── [id].tsx                 # Dynamic segment
+
+components/
+├── ui/                      # Reusable primitive components
+└── <feature>/               # Feature-scoped components
+
+lib/
+├── api/                     # API client functions
+└── utils.ts                 # Shared utilities
+```
+
+### Naming — Mobile Specifics
+
+| Thing | Convention | Example |
+|-------|-----------|---------|
+| Screens | PascalCase component, kebab file | `HomeScreen` in `home.tsx` |
+| Native event handlers | `handle` prefix | `handlePress`, `handleChangeText` |
+| Refs | `Ref` suffix | `inputRef`, `listRef` |
+
+### Import Order (RN)
+
+1. React (`import React from 'react'`)
+2. React Native (`react-native`, `expo-*`)
+3. Expo Router (`expo-router`)
+4. Third-party (`react-native-reanimated`, `@shopify/flash-list`, etc.)
+5. Internal absolute (`@/lib/...`, `@/components/...`)
+6. Relative (`./`, `../`)
+
+### Hard Rules (mobile)
+
+- No `console.log` in committed code — use a logger utility
+- No hardcoded colors (hex/rgb) in component files — NativeWind theme tokens only
+- No `StyleSheet.create` where NativeWind suffices
+- No `ScrollView` + `.map()` for lists with unknown/dynamic length
+- `Platform.OS` checks only for genuinely different behavior (never for style differences)
+
+---
+
 ## Checklist
 
+### Web
 - [ ] No `any` — every type is explicit
 - [ ] Exported functions have explicit return types
 - [ ] `"use client"` only where necessary (interactivity / browser API)
@@ -147,3 +205,10 @@ async function getUser(id: string): Promise<User> {
 - [ ] Import order matches the 5-group rule
 - [ ] Component-specific utils/hooks colocated with the component
 - [ ] Comments only for non-obvious WHY — never for WHAT
+
+### Mobile (additional)
+- [ ] No `console.log` in committed code
+- [ ] No hardcoded colors in component files
+- [ ] No `StyleSheet.create` where NativeWind covers it
+- [ ] No `ScrollView` + `.map()` for dynamic lists
+- [ ] `Platform.OS` used only for behavioral differences

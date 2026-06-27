@@ -83,7 +83,7 @@ Every wizard must show a clear progress indicator.
   Step {currentStep} of {totalSteps}: {stepTitle}
 </p>
 
-// Preferred: visual step indicator with shadcn or custom
+// Required: visual step indicator using shadcn primitives only — no custom step components
 <StepIndicator
   steps={steps}
   currentStep={currentStep}

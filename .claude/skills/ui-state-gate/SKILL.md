@@ -10,10 +10,25 @@ Every component that fetches data, submits data, or displays dynamic content MUS
 ## The Five States
 
 ### 1. Loading
-- Use a skeleton that matches the real layout's shape (columns, card grid, form fields)
-- A bare `<Spinner />` alone is only acceptable for inline micro-actions (e.g., a button that triggers a quick action with no content area to skeleton)
+- Use shadcn `<Skeleton>` — never custom CSS shimmer/pulse animations
+- Compose `<Skeleton>` elements to match the real layout's shape (columns, card grid, form fields)
+- A bare `<Loader2 className="animate-spin" />` (lucide icon) is only acceptable for inline micro-actions (e.g., a button that triggers a quick action with no content area to skeleton) — never a custom `<Spinner />` component
 - Container must have `aria-busy="true"` during loading
 - Skeleton items should not be interactive (no focusable elements inside)
+
+```tsx
+// ✅ Correct — shadcn Skeleton
+import { Skeleton } from '@/components/ui/skeleton'
+
+<div aria-busy="true">
+  <Skeleton className="h-6 w-48 mb-2" />
+  <Skeleton className="h-4 w-full" />
+  <Skeleton className="h-4 w-3/4" />
+</div>
+
+// ❌ Wrong — custom shimmer
+<div className="animate-pulse bg-gray-200 rounded h-6 w-48" />
+```
 
 ### 2. Error
 - Surface a human-readable message — never "Something went wrong" alone; include what failed and whether the user can retry
