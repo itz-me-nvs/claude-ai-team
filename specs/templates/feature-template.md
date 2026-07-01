@@ -100,7 +100,16 @@ Drizzle schema snippet:
 
 ---
 
-## 8. Implementation Notes
+## 8. Implementation Plan (STOP — human review required before Phase 5 build)
+
+> Required for M/L effort or anything touching >1 module/file. Skip for trivial S-effort changes (single file, cosmetic, no new logic) — if skipped, write "Skipped: trivial" and why below instead of linking a file.
+
+Plan file: `specs/features/implementation/FEAT-XX-XX-<name>-impl-plan.md` (from `impl-plan-template.md`)
+Status: `draft` \| `approved` \| `Skipped: trivial — <reason>`
+
+---
+
+## 9. Implementation Notes
 
 > Constraints, gotchas, or pre-decisions the agent must follow. Not optional.
 
@@ -108,7 +117,7 @@ Drizzle schema snippet:
 
 ---
 
-## 9. Out of Scope
+## 10. Out of Scope
 
 > Explicitly list what this feature does NOT cover to prevent scope creep.
 
@@ -116,6 +125,6 @@ Drizzle schema snippet:
 
 ---
 
-## 10. Open Questions
+## 11. Open Questions
 
 - [ ] OQ-01: [question] — owner: [human/agent]

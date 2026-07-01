@@ -33,11 +33,12 @@ Triggered when user wants to CREATE a PRD/SRS from scratch.
 Triggered when user provides existing PRD/SRS/FRD.
 - Follow 8-phase protocol below
 - Never skip phases; never chain autonomously
+- Stepwise build (default): inside Phase 5, do NOT batch-implement all features. One feature/module at a time — create `specs/features/implementation/FEAT-XX-XX-<name>-impl-plan.md` (from `impl-plan-template.md`), link it in feature spec §8 → **STOP for human review, set Status: approved** → build that module → next module. Skip only for trivial S-effort changes (see template note).
 
 ### Flow 3 — Bug Fix
 Triggered when tester or client provides bug report.
 - Create `specs/bugs/BUG-XX-<title>.md` from bug-template
-- Protocol: Reproduce → Diagnose → Fix (frontend-builder / api-integrator) → Test → Verify → Changelog
+- Protocol: Reproduce → Diagnose → fill §6a Implementation Plan → **STOP for human review, set Status: approved** → Fix (frontend-builder / api-integrator) → Test → Verify → Changelog
 - No Epic/Feature spec needed. Skip Phases 1–4.
 - STOP after fix for human review before marking resolved.
 
@@ -45,7 +46,7 @@ Triggered when tester or client provides bug report.
 Triggered when client requests new feature after initial delivery.
 - Create `specs/changes/CHANGE-XX-<name>.md` from change-template
 - Assess impact: touches architecture? → start at Phase 2. New feature only? → start at Phase 4.
-- Then follow normal 8-phase from entry point.
+- Fill §6a Implementation Plan → **STOP for human review, set Status: approved** → then follow normal 8-phase from entry point.
 
 ---
 
@@ -64,7 +65,9 @@ specs/
 ├── epics/
 │   └── EPIC-01-<name>.md
 ├── features/
-│   └── FEAT-01-01-<name>.md   # EPIC-ID-FEAT-ID-name
+│   ├── FEAT-01-01-<name>.md   # EPIC-ID-FEAT-ID-name
+│   └── implementation/
+│       └── FEAT-01-01-<name>-impl-plan.md   # per-module plan, linked from feature spec §8
 ├── changes/
 │   └── CHANGE-01-<name>.md    # post-MVP client feature requests
 ├── bugs/
@@ -72,6 +75,7 @@ specs/
 └── templates/
     ├── epic-template.md
     ├── feature-template.md
+    ├── impl-plan-template.md
     ├── change-template.md
     └── bug-template.md
 ```
@@ -279,8 +283,12 @@ Phase 4 — Feature Specs
 
 Phase 5 — Implementation
   Input:  Approved feature spec
+  Per feature/module (stepwise, not batched):
+    0. Create `specs/features/implementation/FEAT-XX-XX-<name>-impl-plan.md` from `impl-plan-template.md`
+       (files touched, approach, how to verify); link it from feature spec §8
+       — skip only if trivial S-effort (note "Skipped: trivial" in §8 instead). STOP → human sets Status: approved.
   Agents: frontend-builder (web UI) + mobile-builder (RN/Expo screens) + api-integrator (routes/db)
-          IN PARALLEL on non-overlapping files only
+          IN PARALLEL on non-overlapping files only, per approved module
 
   frontend-builder PRE-CODE CHECKLIST (block on all before writing a line of web UI):
     1. Invoke `frontend-design` plugin → commit to aesthetic direction, avoid generic AI slop

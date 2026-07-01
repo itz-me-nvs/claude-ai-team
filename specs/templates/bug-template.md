@@ -43,6 +43,22 @@ What needs to change and why.
 
 ---
 
+## 6a. Implementation Plan (STOP — human review required before coding)
+Not full code. Enough for a dev to pick this up cold.
+
+### Files Touched
+- `path/to/file.ts` — what changes here, why
+
+### Approach
+Step-by-step order of implementation (1, 2, 3…). Note any sequencing constraints (e.g. migration before API change).
+
+### How to Use / Verify
+How a dev exercises the fix locally (command, route, test file to run) once implemented.
+
+**Status:** `draft` \| `approved` — do not start Fix until `approved`.
+
+---
+
 ## 7. Test Cases to Verify Fix
 - [ ] TC-01: [repro case passes]
 - [ ] TC-02: [regression — related area still works]

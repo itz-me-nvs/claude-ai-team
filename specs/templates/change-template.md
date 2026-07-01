@@ -50,5 +50,21 @@ List FEAT-XX-XX specs created from this change request.
 
 ---
 
+## 6a. Implementation Plan (STOP — human review required before coding)
+Not full code. Enough for a dev to pick this up cold.
+
+### Files Touched
+- `path/to/file.ts` — what changes here, why (new / modified / deleted)
+
+### Approach
+Step-by-step build order (1, 2, 3…). Call out sequencing constraints (schema before API, API before UI, etc.) and any new deps.
+
+### How to Use / Verify
+How a dev exercises this once built — commands, routes/screens to hit, tests to run.
+
+**Status:** `draft` \| `approved` — do not start Build until `approved`.
+
+---
+
 ## 7. Open Questions
 - [ ] OQ-01: [question] — owner:
