@@ -43,6 +43,14 @@ You receive a diff or a list of files from the current mobile module implementat
 - Back navigation works correctly and returns focus appropriately
 - Deep-link routes declared in config
 
+### Security (quick pass — security-auditor owns the deep audit)
+Reference: `.claude/skills/mobile-security-standards/SKILL.md`
+- No tokens/secrets in AsyncStorage — SecureStore for auth tokens (Supabase client `auth.storage` adapter)
+- No secrets in `EXPO_PUBLIC_*` vars, `app.json`, or `app.config.ts` `extra`
+- Deep-link params validated before use
+- No `http://` endpoints; tokens never in URLs or logs
+- Any finding here is 🔴 Critical
+
 ### Code Hygiene
 - No `console.log` in committed code
 - No hardcoded colors (hex/rgb) outside theme/design-token files

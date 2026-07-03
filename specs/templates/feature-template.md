@@ -7,7 +7,7 @@
 | Status | `draft` \| `approved` \| `in-progress` \| `done` |
 | Priority | P0 / P1 / P2 |
 | Estimated effort | S / M / L |
-| Assigned agents | frontend-builder, api-integrator, test-engineer |
+| Assigned agents | [project's generated builders + test engineer] |
 
 ---
 

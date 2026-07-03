@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: House style enforced by all builder agents (frontend-builder, mobile-builder, api-integrator) and checked by code-reviewer. Covers naming, file organization, server vs client boundaries, TypeScript strictness, import order, colocation, and comment policy. Applies to both web (Next.js) and mobile (React Native/Expo) code.
+description: House style enforced by all builder agents (web/mobile/api — whatever team-generator created for this project) and checked by the generated code reviewer. Covers naming, file organization, server vs client boundaries, TypeScript strictness, import order, colocation, and comment policy.
 ---
 
 # Coding Standards

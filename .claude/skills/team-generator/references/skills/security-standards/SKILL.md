@@ -179,6 +179,56 @@ redirect(safeNext)
 - Do not add dependencies with no maintenance activity in 12+ months unless there is no alternative
 - Pin direct dependencies; let the lockfile manage transitive versions
 
+## 10. Rate Limiting & Abuse Prevention
+
+Any endpoint that is expensive, sends email/SMS, or can be brute-forced must be rate limited:
+
+- Auth endpoints (login, signup, password reset, OTP) — strictest limits
+- Public API routes and webhook-triggered work
+- AI/LLM-calling endpoints (cost abuse)
+
+```ts
+// lib/rate-limit.ts — Upstash pattern (works in serverless)
+import { Ratelimit } from '@upstash/ratelimit'
+import { Redis } from '@upstash/redis'
+
+export const authLimiter = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, '1 m'), // 5 attempts/min
+})
+
+// In the route handler / server action, before any logic:
+const { success } = await authLimiter.limit(`login:${ip}`)
+if (!success) {
+  return { success: false, error: { code: 'RATE_LIMITED', message: 'Too many attempts. Try again shortly.' } }
+}
+```
+
+- Key by user ID when authenticated, by IP when not
+- Return a generic message — do not reveal limit thresholds
+- Supabase Auth has built-in rate limits; still limit your own wrapper endpoints
+
+## 11. CSRF
+
+- Next.js Server Actions include built-in CSRF protection (origin checking) — do not expose the same mutations through unprotected GET route handlers
+- Mutations must never be reachable via GET
+- Custom POST route handlers called from the browser with cookie auth: verify the `Origin` header matches your host
+- Webhook endpoints (no cookies) are exempt from CSRF but must verify signatures (Stripe/Supabase webhook secrets) before parsing the body
+- Auth cookies: `httpOnly`, `secure`, `sameSite: 'lax'` minimum (`@supabase/ssr` defaults are correct — do not loosen)
+
+## 12. Static Analysis in CI
+
+Mechanical checks run before agent review — agents catch semantics, scanners catch known patterns:
+
+```bash
+pnpm audit --audit-level=high          # dependency CVEs — fail CI on high/critical
+npx semgrep scan --config p/nextjs --config p/typescript --config p/secrets --error
+```
+
+- `semgrep` rulesets: `p/nextjs`, `p/typescript`, `p/secrets` (hardcoded-credential detection)
+- Optional: `gitleaks` as a pre-commit hook to keep secrets out of git history
+- Scanner findings are input to security-auditor, not a replacement for it
+
 ## Audit Checklist (used by security-auditor)
 
 - [ ] Auth check is first in every server action and route handler
@@ -192,3 +242,8 @@ redirect(safeNext)
 - [ ] File uploads: MIME type + size validated server-side
 - [ ] Supabase service role used only for admin tasks
 - [ ] RLS enabled on all user-scoped tables
+- [ ] Rate limiting on auth, expensive, and abuse-prone endpoints
+- [ ] Mutations not reachable via GET; webhook signatures verified before body parse
+- [ ] `pnpm audit` + semgrep pass in CI
+
+For mobile modules, also apply `mobile-security-standards` (SecureStore, EXPO_PUBLIC_ rules, deep links, WebView).

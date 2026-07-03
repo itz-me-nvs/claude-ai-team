@@ -182,17 +182,25 @@ flutter run
 
 ---
 
-## Step 3 — Copy claude-ai-team Workflow Files
+## Step 3 — Copy claude-ai-team Workflow Files (basics only)
 
 After scaffold, copy these from `/projects/Personal/claude-ai-team` into the new project root:
 
 ```bash
-# From master repo
+# From master repo — basics + team-generator (with its references/ exemplars,
+# so runtime gap-fill works without the master repo).
 cp /projects/Personal/claude-ai-team/orchestrator.md <project-name>/orchestrator.md
-cp -r /projects/Personal/claude-ai-team/.claude <project-name>/.claude
+mkdir -p <project-name>/.claude/agents <project-name>/.claude/skills
+cp /projects/Personal/claude-ai-team/.claude/agents/*.md <project-name>/.claude/agents/
+for s in checkpoint coding-standards discovery-interview doc-agent skill-operator team-generator; do
+  cp -r /projects/Personal/claude-ai-team/.claude/skills/$s <project-name>/.claude/skills/$s
+done
 cp -r /projects/Personal/claude-ai-team/specs <project-name>/specs
 mkdir -p <project-name>/docs
 ```
+
+Do NOT copy `project-scaffold` into the project — it runs FROM the master repo.
+No stack-specific agents/skills are copied — they are GENERATED in Step 5.
 
 ---
 
@@ -223,17 +231,10 @@ Workflow constitution: `orchestrator.md` — read before any project work.
 | Plan | spec-analyst | Phase 1 |
 | Architecture | architect | Phase 2 |
 | Research | tech-researcher | Phase 3 |
-| Build (web) | frontend-builder | Phase 5 |
-| Build (mobile) | mobile-builder | Phase 5 |
-| Build (api) | api-integrator | Phase 5 |
-| Tests | test-engineer | Phase 6 |
-| Verify | code-reviewer, security-auditor, a11y-auditor, perf-auditor | Phase 7 |
-| Ship | devops | Phase 8 |
+<!-- filled by team-generator in Step 5 -->
 
 ### Gate Skills
-frontend-builder: `frontend-builder-standards`, `ui-state-gate`, `form-patterns`, `data-grid-patterns`, `stepper-wizard-patterns`, `accessibility-standards`, `frontend-responsive`, `coding-standards`
-mobile-builder: `mobile-builder-standards`, `mobile-ui-patterns`, `mobile-accessibility-standards`, `coding-standards`
-api-integrator: `api-integration-standards`, `security-standards`, `coding-standards`
+<!-- filled by team-generator in Step 5 -->
 
 ### Token Efficiency
 All agents use `caveman` skill (full level). ~75% token reduction on all communication.
@@ -241,7 +242,16 @@ All agents use `caveman` skill (full level). ~75% token reduction on all communi
 
 ---
 
-## Step 5 — Report to User
+## Step 5 — Generate the Team
+
+Invoke the `team-generator` skill. It reads the detected stack + project
+description, generates stack-matched builder/verifier agents and gate skills
+into `<project-name>/.claude/`, and fills the Agents table + Gate Skills
+section of the project `CLAUDE.md` with what was actually created.
+
+---
+
+## Step 6 — Report to User
 
 After scaffold completes, output:
 
@@ -250,7 +260,8 @@ Project: <name>
 Stack: <stack>
 Location: <path>
 Scaffold: done
-claude-ai-team: copied
+claude-ai-team basics: copied
+Team generated: <agents list> / <skills list>
 CLAUDE.md: generated
 
 Next: say "create PRD" → Flow 1, or paste existing doc → Flow 2

@@ -32,8 +32,9 @@ Phase-End Skill Check:
 3. If NO existing skill covers it → invoke skill-operator
 ```
 
-Agents that must run this check: spec-analyst, architect, tech-researcher,
-frontend-builder, mobile-builder, api-integrator, test-engineer, devops.
+Agents that must run this check: all preset agents (spec-analyst, architect,
+tech-researcher) and all team-generator-generated agents (builders, test
+engineer, verifiers, devops).
 
 ---
 
